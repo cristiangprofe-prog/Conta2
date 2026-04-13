@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ContaVisual — Aprende con tus ojos</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --blue: #1a56db;
+  --blue-light: #e8f0fe;
+  --blue-mid: #93b4f8;
+  --red: #c81e1e;
+  --red-light: #fde8e8;
+  --green: #057a55;
+  --green-light: #def7ec;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --purple: #6c2bd9;
+  --purple-light: #ede9fe;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-700: #374151;
+  --gray-900: #111827;
+  --bg: #fdfcfb;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--gray-900); min-height: 100vh; }
+h1,h2,h3,h4,h5 { font-family: 'Syne', sans-serif; }
+
+/* ── Header ── */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(253,252,251,0.85); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 0 2rem;
+}
+.header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-icon { width: 44px; height: 44px; background: var(--blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.logo-icon svg { width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.logo-text h1 { font-size: 20px; font-weight: 800; color: var(--gray-900); }
+.logo-text p { font-size: 10px; font-weight: 700; color: var(--blue); letter-spacing: .1em; text-transform: uppercase; }
+.header-nav { display: flex; gap: 8px; }
+.btn { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; border: none; cursor: pointer; border-radius: var(--radius-sm); padding: 9px 20px; transition: all .15s; }
+.btn-dark { background: var(--gray-900); color: white; }
+.btn-dark:hover { background: var(--gray-700); }
+.btn-outline { background: transparent; border: 1.5px solid var(--gray-200); color: var(--gray-700); }
+.btn-outline:hover { background: var(--gray-100); }
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { background: #1648c0; }
+
+/* ── Main ── */
+main { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+/* ── Hero ── */
+.hero { text-align: center; margin-bottom: 4rem; animation: fadeUp .6s ease both; }
+.hero-badge { display: inline-block; background: var(--blue-light); color: var(--blue); font-size: 13px; font-weight: 700; padding: 5px 16px; border-radius: 999px; border: 1px solid #c3d7fd; margin-bottom: 1.5rem; }
+.hero h2 { font-size: clamp(2.2rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.25rem; }
+.hero h2 span { color: var(--blue); }
+.hero p { font-size: 1.15rem; color: var(--gray-500); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+/* ── Tabs ── */
+.tabs-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; background: var(--gray-100); border-radius: var(--radius); padding: 8px; margin-bottom: 3rem; }
+.tab-btn { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; background: transparent; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; color: var(--gray-500); transition: all .2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--gray-900); background: rgba(255,255,255,.6); }
+.tab-btn.active { background: white; color: var(--gray-900); box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.tab-panel { display: none; animation: fadeUp .35s ease both; }
+.tab-panel.active { display: block; }
+
+/* ── Equation ── */
+.equation-grid { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 12px; margin-bottom: 2rem; }
+@media(max-width:700px){ .equation-grid { grid-template-columns: 1fr; } .eq-sym { transform: rotate(90deg); } }
+.eq-card { border-radius: var(--radius); padding: 2rem; text-align: center; border: 3px solid; transition: transform .2s; }
+.eq-card:hover { transform: translateY(-4px); }
+.eq-card.assets { border-color: var(--blue); background: var(--blue-light); }
+.eq-card.liab { border-color: var(--red); background: var(--red-light); }
+.eq-card.equity { border-color: var(--green); background: var(--green-light); }
+.eq-icon { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+.eq-icon svg { width: 30px; height: 30px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.assets .eq-icon { background: var(--blue); }
+.liab .eq-icon { background: var(--red); }
+.equity .eq-icon { background: var(--green); }
+.eq-card h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: .4rem; }
+.assets h3 { color: #1e3a8a; } .liab h3 { color: #7f1d1d; } .equity h3 { color: #065f46; }
+.eq-card p { font-size: .9rem; font-weight: 500; }
+.assets p { color: #1d4ed8; } .liab p { color: #dc2626; } .equity p { color: #059669; }
+.eq-chip { font-size: 12px; padding: 4px 10px; border-radius: 8px; margin-top: 12px; display: inline-block; font-weight: 600; font-style: italic; }
+.assets .eq-chip { background: #bfdbfe; color: #1e3a8a; }
+.liab .eq-chip { background: #fca5a5; color: #7f1d1d; }
+.equity .eq-chip { background: #6ee7b7; color: #065f46; }
+.eq-sym { font-size: 2rem; color: var(--gray-400); font-weight: 800; text-align: center; }
+.eq-tip { background: var(--amber-light); border: 2px dashed #fbbf24; border-radius: var(--radius); padding: 1.25rem 1.5rem; text-align: center; font-weight: 600; color: var(--amber); }
+
+/* ── Concepts ── */
+.concepts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+.concept-card { border-radius: var(--radius); overflow: hidden; border: 2px solid var(--gray-100); background: white; transition: transform .2s, border-color .2s; cursor: default; }
+.concept-card:hover { transform: translateY(-4px); border-color: var(--blue); }
+.concept-top { padding: 2rem; display: flex; justify-content: center; align-items: center; }
+.concept-top svg { width: 52px; height: 52px; stroke: white; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.concept-body { padding: 1.25rem 1.5rem 1.5rem; }
+.concept-body h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: .4rem; }
+.concept-body p { color: var(--gray-500); line-height: 1.65; margin-bottom: 1rem; }
+.concept-example { background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 10px; padding: 10px 12px; }
+.concept-example span { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gray-400); margin-bottom: 3px; }
+.concept-example p { font-size: 13px; font-weight: 500; color: var(--gray-700); font-style: italic; margin: 0; }
+.concept-video { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.5rem; background: var(--blue-light); border: 2px dashed #93b4f8; border-radius: var(--radius); text-align: center; gap: 12px; }
+.concept-video svg { width: 48px; height: 48px; color: var(--blue); }
+.concept-video h4 { font-size: 1.1rem; font-weight: 800; color: #1e3a8a; }
+.concept-video p { color: #1d4ed8; font-size: .9rem; }
+
+/* ── Dictionary ── */
+.dict-search { position: relative; margin-bottom: 2rem; }
+.dict-search input { width: 100%; padding: 14px 20px 14px 48px; font-size: 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius); background: white; font-family: 'DM Sans', sans-serif; transition: border-color .2s; outline: none; }
+.dict-search input:focus { border-color: var(--blue); }
+.dict-search svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; stroke: var(--gray-400); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.dict-group { margin-bottom: 12px; }
+.dict-group-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: var(--gray-50); border: none; border-radius: 12px; cursor: pointer; font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; color: var(--gray-700); transition: background .15s; text-align: left; }
+.dict-group-btn:hover { background: var(--gray-100); }
+.dict-group-btn .left { display: flex; align-items: center; gap: 12px; }
+.dict-group-btn .icon { width: 32px; height: 32px; background: var(--blue-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.dict-group-btn .icon svg { width: 16px; height: 16px; stroke: var(--blue); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.dict-group-btn .chevron { width: 20px; height: 20px; stroke: var(--gray-400); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+.dict-group-btn.open .chevron { transform: rotate(90deg); }
+.dict-accounts { display: none; padding: 8px 4px; }
+.dict-accounts.open { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.dict-account { background: white; border: 2px solid var(--gray-100); border-radius: 12px; padding: 12px 14px; transition: border-color .2s; display: flex; gap: 10px; }
+.dict-account:hover { border-color: var(--blue-mid); }
+.dict-account svg { width: 16px; height: 16px; stroke: var(--blue-mid); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; margin-top: 2px; }
+.dict-account h4 { font-size: .88rem; font-weight: 700; color: var(--gray-900); margin-bottom: 3px; }
+.dict-account p { font-size: .8rem; color: var(--gray-500); line-height: 1.5; }
+.dict-empty { text-align: center; padding: 5rem 2rem; background: var(--gray-50); border: 2px dashed var(--gray-200); border-radius: var(--radius); color: var(--gray-400); font-weight: 600; }
+
+/* ── Classifier ── */
+.classifier-wrap { max-width: 700px; margin: 0 auto; }
+.progress-bar-wrap { display: flex; gap: 4px; margin-bottom: 2rem; }
+.progress-pip { height: 6px; flex: 1; border-radius: 999px; background: var(--gray-200); transition: background .3s; }
+.progress-pip.done { background: var(--blue); }
+.classifier-card { border-radius: var(--radius); border: 3px solid var(--gray-100); padding: 3rem 2rem; text-align: center; position: relative; overflow: hidden; background: white; margin-bottom: 1.5rem; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.classifier-card h3 { font-size: 2.5rem; font-weight: 800; margin-bottom: .5rem; }
+.classifier-card p { color: var(--gray-500); font-size: 1.05rem; }
+.classifier-feedback { position: absolute; inset: 0; background: rgba(255,255,255,.95); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; animation: popIn .2s ease both; }
+.classifier-feedback svg { width: 80px; height: 80px; }
+.classifier-feedback .fb-text { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; }
+.classifier-feedback .fb-sub { color: var(--gray-500); font-weight: 500; }
+.cat-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+@media(min-width:600px){ .cat-grid { grid-template-columns: repeat(5,1fr); } }
+.cat-btn { border: 2px solid transparent; border-radius: 12px; padding: 1rem .5rem; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: all .2s; font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+.cat-btn:disabled { opacity: .5; cursor: not-allowed; }
+.cat-btn svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cat-btn.activo { background: var(--blue-light); color: #1e3a8a; }
+.cat-btn.activo:hover:not(:disabled) { border-color: var(--blue); transform: scale(1.05); }
+.cat-btn.pasivo { background: var(--red-light); color: #7f1d1d; }
+.cat-btn.pasivo:hover:not(:disabled) { border-color: var(--red); transform: scale(1.05); }
+.cat-btn.patrimonio { background: var(--green-light); color: #065f46; }
+.cat-btn.patrimonio:hover:not(:disabled) { border-color: var(--green); transform: scale(1.05); }
+.cat-btn.perdida { background: #fff7ed; color: #9a3412; }
+.cat-btn.perdida:hover:not(:disabled) { border-color: #f97316; transform: scale(1.05); }
+.cat-btn.ganancia { background: #ecfdf5; color: #065f46; }
+.cat-btn.ganancia:hover:not(:disabled) { border-color: var(--green); transform: scale(1.05); }
+.summary-card { background: white; border: 3px solid var(--blue-light); border-radius: var(--radius); padding: 3rem 2rem; text-align: center; }
+.summary-card h3 { font-size: 2rem; font-weight: 800; margin-bottom: .75rem; }
+.summary-card .score { font-size: 4rem; font-weight: 800; color: var(--blue); line-height: 1; margin-bottom: 1.5rem; }
+
+/* ── Double Entry Guide ── */
+.rules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 2.5rem; }
+.rule-card { border-radius: var(--radius-sm); padding: 1.25rem; border: 2px solid; }
+.rule-card h4 { font-size: .85rem; font-weight: 800; margin-bottom: 1rem; }
+.rule-row { display: flex; justify-content: space-between; align-items: center; font-size: .82rem; padding: 4px 0; }
+.rule-row .lbl { color: var(--gray-400); font-weight: 700; }
+.rule-row .val { font-weight: 700; color: var(--gray-900); }
+.rule-divider { border-top: 1px solid var(--gray-200); margin: 8px 0; }
+.rule-saldo { display: flex; justify-content: space-between; font-size: .78rem; }
+.rule-saldo .lbl { color: var(--gray-400); font-weight: 700; text-transform: uppercase; font-size: .7rem; }
+.questions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+@media(max-width:600px){ .questions-grid { grid-template-columns: 1fr; } }
+.q-card { border-radius: var(--radius); padding: 2rem; border: 3px solid; }
+.q-card.debe { border-color: #bfdbfe; background: #eff6ff; }
+.q-card.haber { border-color: #fca5a5; background: #fef2f2; }
+.q-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+.q-card-head svg { width: 28px; height: 28px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.q-card.debe .q-card-head svg { stroke: var(--blue); }
+.q-card.haber .q-card-head svg { stroke: var(--red); }
+.q-card-head h4 { font-size: 1.1rem; font-weight: 800; }
+.q-card.debe .q-card-head h4 { color: #1e3a8a; }
+.q-card.haber .q-card-head h4 { color: #7f1d1d; }
+.q-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.q-list li { padding: 12px 14px; background: white; border-radius: 10px; font-weight: 600; font-size: .88rem; }
+.q-card.debe .q-list li { color: #1e3a8a; border: 2px solid #bfdbfe; }
+.q-card.haber .q-list li { color: #7f1d1d; border: 2px solid #fca5a5; }
+.principles-box { background: var(--gray-900); color: white; border-radius: var(--radius); padding: 2.5rem; }
+.principles-box h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; }
+.principles-box h3 svg { width: 32px; height: 32px; stroke: #60a5fa; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.principles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media(max-width:600px){ .principles-grid { grid-template-columns: 1fr; } }
+.principle { display: flex; gap: 12px; align-items: flex-start; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 12px 14px; }
+.principle-num { font-weight: 800; color: #93c5fd; font-size: 1rem; flex-shrink: 0; }
+.principle p { font-size: .85rem; color: #d1d5db; line-height: 1.55; }
+
+/* ── T-Account / TerminologyActivity ── */
+.t-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+@media(max-width:700px){ .t-wrap { grid-template-columns: 1fr; } }
+.t-card { background: white; border: 3px solid var(--gray-900); border-radius: var(--radius); padding: 2rem; position: relative; overflow: hidden; }
+.t-card-title { text-align: center; font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; text-decoration: underline; text-decoration-color: var(--blue); text-underline-offset: 6px; text-decoration-thickness: 3px; margin-bottom: 1.25rem; }
+.t-columns { display: grid; grid-template-columns: 1fr 1fr; position: relative; }
+.t-columns::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 3px; background: var(--gray-900); transform: translateX(-50%); }
+.t-col { padding: 0 16px; }
+.t-col.left { padding-left: 0; }
+.t-col.right { padding-right: 0; }
+.t-col-label { text-align: center; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--gray-400); margin-bottom: 12px; }
+.t-val { font-size: 1.1rem; font-weight: 700; padding: 3px 0; }
+.t-col.left .t-val { text-align: right; color: var(--blue); }
+.t-col.right .t-val { text-align: left; color: var(--red); }
+.t-total { border-top: 2px solid var(--gray-900); margin-top: 8px; padding-top: 8px; font-size: 1.25rem; font-weight: 800; color: var(--gray-900); }
+.t-col.left .t-total { text-align: right; }
+.t-col.right .t-total { text-align: left; }
+.t-hint { display: flex; align-items: center; gap: 10px; background: var(--blue-light); border: 1px solid #bfdbfe; border-radius: 12px; padding: 12px 14px; margin-top: 1rem; font-size: .83rem; font-weight: 600; color: #1e3a8a; }
+.t-hint svg { width: 18px; height: 18px; stroke: var(--blue); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.t-options { display: flex; flex-direction: column; gap: 12px; }
+.t-options h4 { font-size: 1rem; font-weight: 700; color: var(--gray-700); margin-bottom: 4px; }
+.t-opt-btn { width: 100%; padding: 1.25rem; border: 2.5px solid; border-radius: 12px; font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; cursor: pointer; transition: all .2s; background: white; }
+.t-opt-btn.deudor { border-color: #bfdbfe; color: var(--blue); }
+.t-opt-btn.deudor:hover:not(:disabled) { background: var(--blue-light); }
+.t-opt-btn.acreedor { border-color: #fca5a5; color: var(--red); }
+.t-opt-btn.acreedor:hover:not(:disabled) { background: var(--red-light); }
+.t-opt-btn.cero { border-color: var(--gray-200); color: var(--gray-500); }
+.t-opt-btn.cero:hover:not(:disabled) { background: var(--gray-100); }
+.t-opt-btn:disabled { opacity: .5; cursor: not-allowed; }
+.t-opt-btn.correct { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.t-opt-btn.wrong { background: var(--red-light); border-color: var(--red); color: var(--red); }
+.t-reminder { background: var(--gray-900); color: white; border-radius: 12px; padding: 1rem 1.25rem; display: flex; gap: 12px; align-items: flex-start; margin-top: 1.5rem; }
+.t-reminder svg { width: 24px; height: 24px; stroke: #60a5fa; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.t-reminder p { font-size: .85rem; color: #d1d5db; line-height: 1.55; }
+.t-feedback-overlay { position: absolute; inset: 0; background: rgba(255,255,255,.96); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; animation: popIn .2s ease both; border-radius: calc(var(--radius) - 3px); }
+.t-feedback-overlay svg { width: 64px; height: 64px; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.t-feedback-overlay .title { font-family: 'Syne',sans-serif; font-size: 1.8rem; font-weight: 800; text-transform: uppercase; }
+.t-feedback-overlay .sub { color: var(--gray-500); font-size: .9rem; font-weight: 500; }
+
+/* ── Simulator ── */
+.sim-totals { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 2rem; }
+.sim-total { text-align: center; padding: 1.5rem; border-radius: var(--radius); border: 2.5px solid; }
+.sim-total.a { background: var(--blue-light); border-color: var(--blue); }
+.sim-total.p { background: var(--red-light); border-color: var(--red); }
+.sim-total.pn { background: var(--green-light); border-color: var(--green); }
+.sim-total svg { width: 28px; height: 28px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin: 0 auto 6px; display: block; }
+.sim-total.a svg { stroke: var(--blue); }
+.sim-total.p svg { stroke: var(--red); }
+.sim-total.pn svg { stroke: var(--green); }
+.sim-total .lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+.sim-total.a .lbl { color: #2563eb; }
+.sim-total.p .lbl { color: var(--red); }
+.sim-total.pn .lbl { color: var(--green); }
+.sim-total .val { font-size: 2rem; font-weight: 800; }
+.sim-total.a .val { color: #1e3a8a; }
+.sim-total.p .val { color: #7f1d1d; }
+.sim-total.pn .val { color: #065f46; }
+.sim-balance-msg { text-align: center; font-size: .82rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; margin-bottom: 1.5rem; display: inline-block; }
+.sim-balance-msg.ok { background: var(--green-light); color: var(--green); }
+.sim-balance-msg.err { background: var(--red-light); color: var(--red); }
+.sim-section-lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-400); margin-bottom: 10px; }
+.sim-ops { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+@media(max-width:600px){ .sim-ops { grid-template-columns: 1fr; } }
+.sim-op-group { display: flex; flex-direction: column; gap: 8px; }
+.sim-op-btn { width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid; border-radius: 12px; background: white; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 600; text-align: left; transition: all .2s; }
+.sim-op-btn:hover { transform: translateX(3px); }
+.sim-op-btn svg { width: 18px; height: 18px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.sim-op-btn.perm { border-color: #bfdbfe; color: #1e3a8a; }
+.sim-op-btn.perm svg { stroke: var(--blue); }
+.sim-op-btn.perm:hover { background: var(--blue-light); }
+.sim-op-btn.modif-g { border-color: #6ee7b7; color: #065f46; }
+.sim-op-btn.modif-g svg { stroke: var(--green); }
+.sim-op-btn.modif-g:hover { background: var(--green-light); }
+.sim-op-btn.modif-p { border-color: #fca5a5; color: #7f1d1d; }
+.sim-op-btn.modif-p svg { stroke: var(--red); }
+.sim-op-btn.modif-p:hover { background: var(--red-light); }
+.sim-op-btn.mixta { border-color: #fde68a; color: #92400e; }
+.sim-op-btn.mixta svg { stroke: #d97706; }
+.sim-op-btn.mixta:hover { background: var(--amber-light); }
+.sim-history { border-top: 1.5px solid var(--gray-200); padding-top: 1.5rem; }
+.history-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 12px 14px; background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 12px; margin-bottom: 8px; animation: slideDown .25s ease both; }
+.history-item-left { display: flex; gap: 10px; align-items: flex-start; }
+.history-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.history-icon svg { width: 16px; height: 16px; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.hist-perm { background: #dbeafe; } .hist-perm svg { stroke: var(--blue); }
+.hist-modif { background: var(--purple-light); } .hist-modif svg { stroke: var(--purple); }
+.hist-mixta { background: var(--amber-light); } .hist-mixta svg { stroke: var(--amber); }
+.history-desc { font-weight: 600; font-size: .88rem; color: var(--gray-900); }
+.history-sub { font-size: .78rem; color: var(--gray-500); margin-top: 2px; }
+.history-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.history-amount { font-weight: 800; font-size: 1rem; }
+.badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 8px; }
+.badge-perm { background: #dbeafe; color: #1e3a8a; }
+.badge-modif { background: var(--purple-light); color: #4c1d95; }
+.badge-mixta { background: var(--amber-light); color: #78350f; }
+.sim-empty { text-align: center; padding: 3rem 1rem; background: var(--gray-50); border: 2px dashed var(--gray-200); border-radius: var(--radius); color: var(--gray-400); font-style: italic; }
+.reset-btn { width: 100%; padding: 12px; border: none; background: none; cursor: pointer; color: var(--gray-400); font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600; border-radius: 12px; transition: background .15s; }
+.reset-btn:hover { background: var(--gray-100); color: var(--gray-600); }
+
+/* ── Quiz ── */
+.quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+.quiz-pips { display: flex; gap: 6px; }
+.quiz-pip { height: 6px; width: 32px; border-radius: 999px; background: var(--gray-200); transition: background .3s; }
+.quiz-pip.done { background: var(--blue); }
+.quiz-question { text-align: center; font-size: 1.7rem; font-weight: 800; margin-bottom: 2.5rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 580px; margin: 0 auto; }
+.quiz-opt { position: relative; border: 3px solid var(--gray-100); border-radius: var(--radius); padding: 2rem 1rem; background: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: .75rem; transition: all .25s; font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; }
+.quiz-opt:hover:not(:disabled) { transform: translateY(-5px); border-color: #93b4f8; }
+.quiz-opt:disabled { cursor: not-allowed; }
+.quiz-opt .opt-icon { width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+.quiz-opt .opt-icon svg { width: 36px; height: 36px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.quiz-opt.correct { border-color: var(--green); background: var(--green-light); transform: scale(1.03); }
+.quiz-opt.wrong { border-color: var(--red); background: var(--red-light); }
+.quiz-opt.reveal-correct { border-color: var(--green); background: var(--green-light); }
+.quiz-opt.dimmed { opacity: .4; }
+.feedback-badge { position: absolute; top: -14px; right: -14px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; }
+.feedback-badge.ok { background: var(--green); }
+.feedback-badge.err { background: var(--red); }
+.feedback-badge svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.quiz-result { text-align: center; background: white; border: 3px solid var(--blue-light); border-radius: var(--radius); padding: 3.5rem 2rem; animation: fadeUp .4s ease both; }
+.quiz-result-icon { width: 80px; height: 80px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+.quiz-result-icon svg { width: 42px; height: 42px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.quiz-result h3 { font-size: 2rem; font-weight: 800; margin-bottom: .5rem; }
+.quiz-result p { font-size: 1.2rem; color: var(--gray-500); margin-bottom: 2rem; }
+
+/* ── Tips ── */
+.tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 4rem; }
+.tip-card { padding: 2rem; border-radius: var(--radius); border: 1px solid; }
+.tip-card.yellow { background: var(--amber-light); border-color: #fde68a; }
+.tip-card.green { background: var(--green-light); border-color: #6ee7b7; }
+.tip-card.purple { background: var(--purple-light); border-color: #c4b5fd; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.tip-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+.tip-icon svg { width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tip-card.yellow .tip-icon { background: #f59e0b; }
+.tip-card.green .tip-icon { background: var(--green); }
+.tip-card h4 { font-size: 1.05rem; font-weight: 800; margin-bottom: .6rem; }
+.tip-card.yellow h4 { color: #78350f; } .tip-card.green h4 { color: #065f46; }
+.tip-card p { font-size: .88rem; line-height: 1.65; }
+.tip-card.yellow p { color: var(--amber); } .tip-card.green p { color: #047857; }
+.tip-card.purple p { color: #6c2bd9; font-weight: 700; font-size: 1rem; margin-bottom: 1rem; }
+
+/* ── Footer ── */
+footer { border-top: 1px solid var(--gray-200); padding: 2.5rem 2rem; background: white; margin-top: 4rem; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
+.footer-logo { display: flex; align-items: center; gap: 8px; }
+.footer-logo .fi { width: 30px; height: 30px; background: var(--gray-200); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.footer-logo .fi svg { width: 16px; height: 16px; stroke: var(--gray-500); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.footer-logo span { font-weight: 700; color: var(--gray-400); font-size: .9rem; }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a { font-size: .85rem; font-weight: 700; color: var(--gray-400); text-decoration: none; }
+.footer-links a:hover { color: var(--gray-600); }
+
+/* ── Animations ── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes popIn { from { opacity:0; transform:scale(.8); } to { opacity:1; transform:scale(1); } }
+@keyframes slideDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── Section headers ── */
+.section-header { text-align: center; max-width: 600px; margin: 0 auto 2.5rem; }
+.section-header h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: .6rem; }
+.section-header p { color: var(--gray-500); font-size: 1rem; line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </div>
+      <div class="logo-text">
+        <h1>ContaVisual</h1>
+        <p>Aprende con tus ojos</p>
+      </div>
+    </a>
+    <div class="header-nav">
+      <button class="btn btn-outline" onclick="showTab('concepts')">Lecciones</button>
+      <button class="btn btn-dark" onclick="showTab('quiz')">Reto Visual</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">¡Hola, estudiante! 👋</div>
+    <h2>La contabilidad es<br><span>fácil cuando la ves.</span></h2>
+    <p>Olvídate de los textos largos. Aprende cómo funciona el dinero en una empresa usando imágenes y ejemplos que puedes tocar.</p>
+  </section>
+
+  <!-- TABS NAV -->
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="showTab('equation')">La Balanza</button>
+    <button class="tab-btn" onclick="showTab('concepts')">Conceptos</button>
+    <button class="tab-btn" onclick="showTab('dictionary')">Diccionario</button>
+    <button class="tab-btn" onclick="showTab('classifier')">Clasificador</button>
+    <button class="tab-btn" onclick="showTab('guide')">Guía Debe/Haber</button>
+    <button class="tab-btn" onclick="showTab('taccounts')">Práctica T</button>
+    <button class="tab-btn" onclick="showTab('simulator')">Simulador</button>
+    <button class="tab-btn" onclick="showTab('quiz')">Reto Visual</button>
+  </div>
+
+  <!-- ── TAB: EQUATION ── -->
+  <div id="tab-equation" class="tab-panel active">
+    <div class="section-header">
+      <h3>La Ecuación Contable</h3>
+      <p>Imagina que tu empresa es una balanza. Todo lo que tienes (Activos) debe ser igual a lo que debes (Pasivos) más lo que es tuyo (Patrimonio).</p>
+    </div>
+    <div class="equation-grid">
+      <div class="eq-card assets">
+        <div class="eq-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+        <h3>ACTIVOS</h3>
+        <p>Lo que la empresa TIENE</p>
+        <span class="eq-chip">Dinero · Mercancía · Local</span>
+      </div>
+      <div class="eq-sym">=</div>
+      <div class="eq-card liab">
+        <div class="eq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h3>PASIVOS</h3>
+        <p>Lo que la empresa DEBE</p>
+        <span class="eq-chip">Préstamos · Deudas</span>
+      </div>
+      <div class="eq-sym">+</div>
+      <div class="eq-card equity">
+        <div class="eq-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <h3>PATRIMONIO</h3>
+        <p>Lo que es de los DUEÑOS</p>
+        <span class="eq-chip">Capital Inicial</span>
+      </div>
+    </div>
+    <div class="eq-tip">💡 ¡Recuerda! La balanza siempre debe estar equilibrada. <strong>Activos = Pasivos + Patrimonio Neto</strong></div>
+  </div>
+
+  <!-- ── TAB: CONCEPTS ── -->
+  <div id="tab-concepts" class="tab-panel">
+    <div class="concepts-grid">
+      <div class="concept-card">
+        <div class="concept-top" style="background:#1a56db">
+          <svg viewBox="0 0 24 24" style="width:52px;height:52px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div class="concept-body">
+          <h3>Activos</h3>
+          <p>Son todas las cosas que la empresa tiene y que valen dinero.</p>
+          <div class="concept-example"><span>Ejemplo visual</span><p>"Caja, Banco, Mercaderías, Rodados."</p></div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-top" style="background:#c81e1e">
+          <svg viewBox="0 0 24 24" style="width:52px;height:52px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="concept-body">
+          <h3>Pasivos</h3>
+          <p>Son las deudas que la empresa tiene con otras personas o bancos.</p>
+          <div class="concept-example"><span>Ejemplo visual</span><p>"Proveedores, Documentos a Pagar, Acreedores Varios."</p></div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-top" style="background:#057a55">
+          <svg viewBox="0 0 24 24" style="width:52px;height:52px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="concept-body">
+          <h3>Ingresos / Ganancias</h3>
+          <p>Es el dinero que entra a la empresa cuando vendes algo o ganas un interés.</p>
+          <div class="concept-example"><span>Ejemplo visual</span><p>"Ventas, Alquileres Ganados, Intereses Ganados."</p></div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-top" style="background:#d97706">
+          <svg viewBox="0 0 24 24" style="width:52px;height:52px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+        </div>
+        <div class="concept-body">
+          <h3>Gastos / Pérdidas</h3>
+          <p>Es el dinero que sale para que la empresa pueda funcionar.</p>
+          <div class="concept-example"><span>Ejemplo visual</span><p>"Costo de Mercaderías Vendidas, Sueldos, Energía Eléctrica."</p></div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-top" style="background:#059669">
+          <svg viewBox="0 0 24 24" style="width:52px;height:52px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="concept-body">
+          <h3>Patrimonio Neto</h3>
+          <p>Es lo que realmente le queda a los dueños después de pagar deudas.</p>
+          <div class="concept-example"><span>Ejemplo visual</span><p>"Capital, Reservas, Resultado del Ejercicio."</p></div>
+        </div>
+      </div>
+      <div class="concept-video">
+        <svg viewBox="0 0 24 24" style="width:48px;height:48px;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        <h4>¿Quieres ver un video?</h4>
+        <p>Aprende estos conceptos con una historia animada.</p>
+        <button class="btn btn-primary">Ver Video</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: DICTIONARY ── -->
+  <div id="tab-dictionary" class="tab-panel">
+    <div class="section-header">
+      <h3>Diccionario de Cuentas</h3>
+      <p>Consulta el significado de cada cuenta contable.</p>
+    </div>
+    <div style="max-width:800px;margin:0 auto">
+      <div class="dict-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="dict-input" placeholder="Busca una cuenta (ej: Caja, Ventas...)" oninput="filterDict(this.value)" />
+      </div>
+      <div id="dict-groups"></div>
+      <div id="dict-empty" class="dict-empty" style="display:none">
+        <p style="font-size:1.2rem">No encontramos esa cuenta...</p>
+        <p style="font-weight:400;margin-top:6px">Prueba con otra palabra.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: CLASSIFIER ── -->
+  <div id="tab-classifier" class="tab-panel">
+    <div class="section-header">
+      <h3>Clasificador de Cuentas</h3>
+      <p>¿Sabes a qué grupo pertenece cada cuenta? ¡Pruébalo!</p>
+    </div>
+    <div class="classifier-wrap">
+      <div class="progress-bar-wrap" id="clf-progress"></div>
+      <div id="clf-main"></div>
+      <div class="cat-grid" id="clf-cats"></div>
+    </div>
+  </div>
+
+  <!-- ── TAB: GUIDE ── -->
+  <div id="tab-guide" class="tab-panel">
+    <div style="max-width:1100px;margin:0 auto">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem">
+        <svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+        <h3 style="font-size:1.8rem;font-weight:800">Reglas de Registro</h3>
+      </div>
+      <div class="rules-grid">
+        <div class="rule-card" style="border-color:#bfdbfe;background:#eff6ff"><h4 style="color:#1e3a8a">ACTIVO</h4><div class="rule-row"><span class="lbl">DEBE</span><span class="val">Aumentan (+)</span></div><div class="rule-row"><span class="lbl">HABER</span><span class="val">Disminuyen (−)</span></div><div class="rule-divider"></div><div class="rule-saldo"><span class="lbl">Saldo</span><span style="font-weight:800;color:var(--gray-900)">DEUDOR</span></div></div>
+        <div class="rule-card" style="border-color:#fca5a5;background:#fef2f2"><h4 style="color:#7f1d1d">PASIVO</h4><div class="rule-row"><span class="lbl">DEBE</span><span class="val">Disminuyen (−)</span></div><div class="rule-row"><span class="lbl">HABER</span><span class="val">Aumentan (+)</span></div><div class="rule-divider"></div><div class="rule-saldo"><span class="lbl">Saldo</span><span style="font-weight:800;color:var(--gray-900)">ACREEDOR</span></div></div>
+        <div class="rule-card" style="border-color:#6ee7b7;background:#ecfdf5"><h4 style="color:#065f46">PATRIMONIO NETO</h4><div class="rule-row"><span class="lbl">DEBE</span><span class="val">Disminuyen (−)</span></div><div class="rule-row"><span class="lbl">HABER</span><span class="val">Aumentan (+)</span></div><div class="rule-divider"></div><div class="rule-saldo"><span class="lbl">Saldo</span><span style="font-weight:800;color:var(--gray-900)">ACREEDOR</span></div></div>
+        <div class="rule-card" style="border-color:#fed7aa;background:#fff7ed"><h4 style="color:#9a3412">PÉRDIDAS</h4><div class="rule-row"><span class="lbl">DEBE</span><span class="val">Aumentan (+)</span></div><div class="rule-row"><span class="lbl">HABER</span><span class="val">Disminuyen (−)</span></div><div class="rule-divider"></div><div class="rule-saldo"><span class="lbl">Saldo</span><span style="font-weight:800;color:var(--gray-900)">DEUDOR</span></div></div>
+        <div class="rule-card" style="border-color:#6ee7b7;background:#f0fdf4"><h4 style="color:#065f46">GANANCIAS</h4><div class="rule-row"><span class="lbl">DEBE</span><span class="val">Disminuyen (−)</span></div><div class="rule-row"><span class="lbl">HABER</span><span class="val">Aumentan (+)</span></div><div class="rule-divider"></div><div class="rule-saldo"><span class="lbl">Saldo</span><span style="font-weight:800;color:var(--gray-900)">ACREEDOR</span></div></div>
+      </div>
+      <div class="questions-grid">
+        <div class="q-card debe">
+          <div class="q-card-head"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><h4>Para el DEBE</h4></div>
+          <ul class="q-list">
+            <li>1- ¿Qué Recibo?</li><li>2- ¿Qué Cuenta Recibe?</li><li>3- ¿Recibo Algo Más?</li><li>4- ¿Hay Pérdidas?</li><li>5- ¿Qué Cuenta Recibe la Pérdida?</li>
+          </ul>
+        </div>
+        <div class="q-card haber">
+          <div class="q-card-head"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><h4>Para el HABER</h4></div>
+          <ul class="q-list">
+            <li>1- ¿Qué Entrego?</li><li>2- ¿Qué Cuenta Entrega?</li><li>3- ¿Entrego Algo Más?</li><li>4- ¿Hay Ganancias?</li><li>5- ¿Qué Cuenta Entregó la Ganancia?</li>
+          </ul>
+        </div>
+      </div>
+      <div class="principles-box">
+        <h3><svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>Principios de la Partida Doble</h3>
+        <div class="principles-grid" id="principles-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: T-ACCOUNTS ── -->
+  <div id="tab-taccounts" class="tab-panel">
+    <div class="section-header">
+      <h3>¿Cuál es el Saldo?</h3>
+      <p>Mira la cuenta T y decide si el saldo es Deudor, Acreedor o si está Saldada.</p>
+    </div>
+    <div class="t-wrap">
+      <div>
+        <div class="t-card" id="t-card-container">
+          <div id="t-card-content"></div>
+        </div>
+        <div class="t-hint">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Si el DEBE es mayor, el saldo es DEUDOR. Si el HABER es mayor, el saldo es ACREEDOR.
+        </div>
+      </div>
+      <div class="t-options">
+        <h4>Selecciona el tipo de saldo:</h4>
+        <button class="t-opt-btn deudor" onclick="tCheck('Deudor')">SALDO DEUDOR</button>
+        <button class="t-opt-btn acreedor" onclick="tCheck('Acreedor')">SALDO ACREEDOR</button>
+        <button class="t-opt-btn cero" onclick="tCheck('Cero')">CUENTA SALDADA</button>
+        <div class="t-reminder">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          <p>El saldo es la diferencia entre el total del Debe y el total del Haber.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: SIMULATOR ── -->
+  <div id="tab-simulator" class="tab-panel">
+    <div class="section-header">
+      <h3>Simulador de Negocio</h3>
+      <p>¡Es hora de practicar! Realiza operaciones y mira cómo se mueven los números en tiempo real.</p>
+    </div>
+    <div style="max-width:860px;margin:0 auto">
+      <div class="sim-totals">
+        <div class="sim-total a">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          <div class="lbl">Activos</div>
+          <div class="val" id="sim-assets">$1000</div>
+        </div>
+        <div class="sim-total p">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <div class="lbl">Pasivos</div>
+          <div class="val" id="sim-liab">$400</div>
+        </div>
+        <div class="sim-total pn">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <div class="lbl">Patrimonio</div>
+          <div class="val" id="sim-equity">$600</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <span class="sim-balance-msg ok" id="sim-balance-msg">✓ La ecuación está equilibrada (A = P + PN)</span>
+      </div>
+      <div class="sim-ops">
+        <div class="sim-op-group">
+          <div class="sim-section-lbl">Permutativas (PN constante)</div>
+          <button class="sim-op-btn perm" onclick="simOp('perm_cash')">
+            <svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>Compra en Efectivo ($100)
+          </button>
+          <button class="sim-op-btn perm" onclick="simOp('perm_credit')">
+            <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Compra a Crédito ($200)
+          </button>
+          <button class="sim-op-btn perm" onclick="simOp('perm_pay')">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Pago de Deuda ($200)
+          </button>
+        </div>
+        <div class="sim-op-group">
+          <div class="sim-section-lbl">Modificativas (PN cambia)</div>
+          <button class="sim-op-btn modif-g" onclick="simOp('modif_gain')">
+            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Cobro Alquiler ($120)
+          </button>
+          <button class="sim-op-btn modif-p" onclick="simOp('modif_loss')">
+            <svg viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>Pago Impuestos ($20)
+          </button>
+          <div class="sim-section-lbl" style="margin-top:1rem">Variaciones Mixtas</div>
+          <button class="sim-op-btn mixta" onclick="simOp('mixta_desc')">
+            <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Compra con Descuento
+          </button>
+          <button class="sim-op-btn mixta" onclick="simOp('mixta_int')">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Compra con Interés
+          </button>
+        </div>
+      </div>
+      <button class="reset-btn" onclick="simReset()">↺ Reiniciar Simulador</button>
+      <div class="sim-history">
+        <div class="sim-section-lbl">Últimos movimientos</div>
+        <div id="sim-history-list">
+          <div class="sim-empty">Haz clic en un botón para ver el impacto en la balanza</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: QUIZ ── -->
+  <div id="tab-quiz" class="tab-panel">
+    <div style="max-width:640px;margin:0 auto" id="quiz-wrap"></div>
+  </div>
+
+  <!-- TIPS -->
+  <div class="tips-grid">
+    <div class="tip-card yellow">
+      <div class="tip-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg></div>
+      <h4>Tip del día</h4>
+      <p>Si comprás algo en efectivo, tus activos no cambian el total, solo cambian de forma (dinero por objeto).</p>
+    </div>
+    <div class="tip-card green">
+      <div class="tip-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <h4>Misión cumplida</h4>
+      <p>Has completado la introducción a la balanza contable. ¡Sigue así!</p>
+    </div>
+    <div class="tip-card purple">
+      <p>¿Listo para un reto?</p>
+      <button class="btn btn-primary" onclick="showTab('quiz')" style="width:100%;padding:14px;">Tomar Quiz Visual</button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="fi"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+      <span>ContaVisual 2025</span>
+    </div>
+    <div class="footer-links">
+      <a href="#">Accesibilidad</a>
+      <a href="#">Ayuda</a>
+      <a href="#">Contacto</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── DATA ──
+const accountsData = [
+  { category: 'Activo', accounts: [
+    { name: 'Caja', description: 'Dinero en efectivo.' },
+    { name: 'Valores a depositar', description: 'Cheques recibidos de terceros.' },
+    { name: 'Banco cta. cte.', description: 'Dinero depositado en cuenta corriente en un banco.' },
+    { name: 'Banco caja de Ahorro', description: 'Dinero depositado en caja de ahorro en un banco.' },
+    { name: 'Banco plazo fijo', description: 'Dinero depositado en un banco, a plazo fijo.' },
+    { name: 'Moneda extranjera', description: 'Monedas de otros países en poder de la empresa.' },
+    { name: 'Deudores por ventas', description: 'Personas que deben dinero a la empresa por compra de mercaderías a plazo.' },
+    { name: 'Deudores varios', description: 'Personas que deben a la empresa por otras causas.' },
+    { name: 'Documentos a cobrar', description: 'Pagarés a favor de la empresa.' },
+    { name: 'Alquileres a cobrar', description: 'Monto que se cobrará por ceder el uso de un bien.' },
+    { name: 'Intereses a cobrar', description: 'Monto adicional que se cobrará por otorgar tiempo para un pago.' },
+    { name: 'Mercaderías', description: 'Bienes que la empresa se dedica especialmente a vender.' },
+    { name: 'Instalaciones', description: 'Elementos adheridos al inmueble (carteles, ventiladores, estanterías).' },
+    { name: 'Muebles y útiles', description: 'Bienes destinados al uso que pueden trasladarse (mesas, sillas).' },
+    { name: 'Rodados', description: 'Vehículos destinados al uso (camiones, autos).' },
+    { name: 'Maquinarias', description: 'Máquinas industriales.' },
+    { name: 'Equipos de computación', description: 'Sistemas informáticos de la empresa.' },
+    { name: 'Inmuebles', description: 'Casas, departamentos, locales, etc.' },
+    { name: 'Llave de negocio', description: 'Prestigio y clientela que pueden originar ganancias futuras.' },
+  ]},
+  { category: 'Pasivo', accounts: [
+    { name: 'Acreedores', description: 'Personas a las que se debe por préstamos u otras causas.' },
+    { name: 'Proveedores', description: 'Personas a las que se debe por compra de mercaderías a plazo.' },
+    { name: 'Documentos a pagar', description: 'Pagarés entregados a favor de terceros.' },
+    { name: 'Cheques diferidos a pagar', description: 'Cheques diferidos entregados a terceros.' },
+    { name: 'Alquileres a pagar', description: 'Monto que se pagará por el uso de un bien.' },
+    { name: 'Comisiones a pagar', description: 'Monto que se pagará a un intermediario.' },
+    { name: 'Intereses a pagar', description: 'Recargo que se pagará por obtener un plazo.' },
+  ]},
+  { category: 'Patrimonio Neto', accounts: [
+    { name: 'Capital', description: 'Diferencia entre Activo y Pasivo; lo que realmente posee la empresa.' },
+    { name: 'Reservas', description: 'Ganancias retenidas por la empresa por ley o decisión propia.' },
+  ]},
+  { category: 'Resultado Negativo (Pérdidas)', accounts: [
+    { name: 'Costo de mercaderías vendidas', description: 'Gasto incurrido en obtener las mercaderías vendidas.' },
+    { name: 'Gastos Generales', description: 'Gastos varios (viáticos, limpieza, etc.).' },
+    { name: 'Sueldos y Jornales', description: 'Remuneraciones pagadas a los empleados.' },
+    { name: 'Servicios', description: 'Pagos de luz, gas, teléfono, etc.' },
+    { name: 'Fletes y acarreos', description: 'Gastos de transporte.' },
+    { name: 'Intereses pagados', description: 'Recargo por pago en cuotas o fuera de término.' },
+    { name: 'Alquileres pagados', description: 'Pago mensual por el uso de un inmueble.' },
+  ]},
+  { category: 'Resultado Positivo (Ganancias)', accounts: [
+    { name: 'Ventas', description: 'Ingresos obtenidos al vender mercaderías.' },
+    { name: 'Descuentos obtenidos', description: 'Rebaja obtenida en el precio de una compra.' },
+    { name: 'Intereses cobrados', description: 'Recargo que se cobra por otorgar plazos.' },
+    { name: 'Alquileres cobrados', description: 'Cobro mensual por dar en uso un inmueble.' },
+    { name: 'Comisiones ganadas', description: 'Dinero percibido por realizar una tarea para otros.' },
+  ]}
+];
+
+// ── TAB SYSTEM ──
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  const map = { equation:0, concepts:1, dictionary:2, classifier:3, guide:4, taccounts:5, simulator:6, quiz:7 };
+  if (map[id] !== undefined) btns[map[id]].classList.add('active');
+}
+
+// ── DICTIONARY ──
+let expandedGroups = ['Activo'];
+function renderDict(filter='') {
+  const container = document.getElementById('dict-groups');
+  const empty = document.getElementById('dict-empty');
+  const f = filter.toLowerCase();
+  const filtered = accountsData.map(g => ({
+    ...g,
+    accounts: g.accounts.filter(a => a.name.toLowerCase().includes(f) || a.description.toLowerCase().includes(f))
+  })).filter(g => g.accounts.length > 0);
+
+  if (filtered.length === 0) { container.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  container.innerHTML = filtered.map(g => `
+    <div class="dict-group">
+      <button class="dict-group-btn ${expandedGroups.includes(g.category)?'open':''}" onclick="toggleDictGroup('${g.category}')">
+        <div class="left">
+          <div class="icon"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+          ${g.category}
+        </div>
+        <svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div class="dict-accounts ${expandedGroups.includes(g.category)?'open':''}">
+        ${g.accounts.map(a => `
+          <div class="dict-account">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div><h4>${a.name}</h4><p>${a.description}</p></div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+function toggleDictGroup(cat) {
+  expandedGroups = expandedGroups.includes(cat) ? expandedGroups.filter(c=>c!==cat) : [...expandedGroups, cat];
+  renderDict(document.getElementById('dict-input').value);
+}
+function filterDict(v) { renderDict(v); }
+renderDict();
+
+// ── CLASSIFIER ──
+const clfAccounts = [
+  { name:'Caja', category:'Activo', description:'Dinero en efectivo' },
+  { name:'Proveedores', category:'Pasivo', description:'Deudas por compra de mercadería' },
+  { name:'Capital', category:'Patrimonio Neto', description:'Inversión de los dueños' },
+  { name:'Ventas', category:'Ganancia', description:'Ingresos por ventas' },
+  { name:'Costo de Mercaderías Vendidas', category:'Perdida', description:'Gasto por lo vendido' },
+  { name:'Banco xx Cta Cte', category:'Activo', description:'Dinero en el banco' },
+  { name:'Documentos a Pagar', category:'Pasivo', description:'Pagarés firmados' },
+  { name:'Alquileres Ganados', category:'Ganancia', description:'Cobro de alquileres' },
+  { name:'Sueldos y Jornales', category:'Perdida', description:'Pago a empleados' },
+  { name:'Mercaderías', category:'Activo', description:'Bienes para la venta' },
+];
+const clfCats = [
+  { label:'Activo', cls:'activo', icon:'<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>' },
+  { label:'Pasivo', cls:'pasivo', icon:'<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>' },
+  { label:'Patrimonio Neto', cls:'patrimonio', icon:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>' },
+  { label:'Perdida', cls:'perdida', icon:'<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>' },
+  { label:'Ganancia', cls:'ganancia', icon:'<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' },
+];
+let clfIndex = 0, clfScore = 0, clfFeedback = null, clfDone = false;
+
+function renderClassifier() {
+  const prog = document.getElementById('clf-progress');
+  const main = document.getElementById('clf-main');
+  const cats = document.getElementById('clf-cats');
+
+  if (clfDone) {
+    prog.innerHTML = '';
+    main.innerHTML = `
+      <div class="summary-card">
+        <h3>¡Clasificación Completa!</h3>
+        <div class="score">${clfScore} / ${clfAccounts.length}</div>
+        <p style="color:var(--gray-500);margin-bottom:1.5rem">Cuentas clasificadas correctamente.</p>
+        <button class="btn btn-primary" onclick="clfReset()" style="font-size:1rem;padding:14px 32px">Jugar de nuevo</button>
+      </div>`;
+    cats.innerHTML = '';
+    return;
+  }
+
+  prog.innerHTML = clfAccounts.map((_,i) =>
+    `<div class="progress-pip ${i < clfIndex ? 'done' : ''}"></div>`).join('');
+
+  const acc = clfAccounts[clfIndex];
+  main.innerHTML = `
+    <div class="classifier-card">
+      <h3>${acc.name}</h3>
+      <p>${acc.description}</p>
+      ${clfFeedback ? `
+        <div class="classifier-feedback">
+          ${clfFeedback === 'correct'
+            ? `<svg viewBox="0 0 24 24" style="width:80px;height:80px;stroke:#057a55;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+               <div class="fb-text" style="color:var(--green)">¡Correcto!</div>`
+            : `<svg viewBox="0 0 24 24" style="width:80px;height:80px;stroke:var(--red);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+               <div class="fb-text" style="color:var(--red)">Incorrecto</div>
+               <div class="fb-sub">Es un <strong>${acc.category}</strong></div>`}
+        </div>` : ''}
+    </div>`;
+
+  cats.innerHTML = clfCats.map(c => `
+    <button class="cat-btn ${c.cls}" onclick="clfClassify('${c.label}')" ${clfFeedback ? 'disabled' : ''}>
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">${c.icon}</svg>
+      ${c.label}
+    </button>`).join('');
+}
+
+function clfClassify(cat) {
+  if (clfFeedback) return;
+  const acc = clfAccounts[clfIndex];
+  clfFeedback = cat === acc.category ? 'correct' : 'incorrect';
+  if (clfFeedback === 'correct') clfScore++;
+  renderClassifier();
+  setTimeout(() => {
+    clfFeedback = null;
+    if (clfIndex < clfAccounts.length - 1) { clfIndex++; }
+    else { clfDone = true; }
+    renderClassifier();
+  }, 1500);
+}
+function clfReset() { clfIndex = 0; clfScore = 0; clfFeedback = null; clfDone = false; renderClassifier(); }
+renderClassifier();
+
+// ── GUIDE PRINCIPLES ──
+const principles = [
+  "No puede existir deudor sin acreedor.",
+  "La persona o cuenta que recibe debe a la que entrega.",
+  "Las partidas deudoras y acreedoras deben ser iguales.",
+  "Lo que se recibe se debita, lo que se entrega se acredita.",
+  "Las cuentas del Activo se debitan cuando aumentan.",
+  "Las cuentas del Pasivo se acreditan cuando aumentan.",
+  "Las Pérdidas son deudoras.",
+  "Las Ganancias son acreedoras.",
+  "Una cuenta a Cobrar se debita, una a Pagar se acredita.",
+  "En cada cuenta se registran partidas de una sola naturaleza."
+];
+document.getElementById('principles-grid').innerHTML = principles.map((p,i) => `
+  <div class="principle">
+    <span class="principle-num">${String(i+1).padStart(2,'0')}</span>
+    <p>${p}</p>
+  </div>`).join('');
+
+// ── T-ACCOUNTS ──
+const tChallenges = [
+  { accountName: 'Caja', debe: [500, 200], haber: [300], correctSaldoType: 'Deudor', correctAmount: 400 },
+  { accountName: 'Proveedores', debe: [100], haber: [400, 200], correctSaldoType: 'Acreedor', correctAmount: 500 },
+  { accountName: 'Banco cta. cte.', debe: [1000], haber: [1000], correctSaldoType: 'Cero', correctAmount: 0 },
+];
+let tStep = 0, tScore = 0, tFeedback = null, tDone = false, tSelected = null;
+
+function renderTCard() {
+  const container = document.getElementById('t-card-container');
+  const opts = document.querySelectorAll('.t-opt-btn');
+  if (tDone) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:2rem">
+        <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:.5rem">¡Misión Cumplida!</div>
+        <div style="font-size:3rem;font-weight:800;color:var(--blue);margin:.75rem 0">${tScore} / ${tChallenges.length}</div>
+        <button class="btn btn-primary" onclick="tReset()" style="margin-top:1rem;padding:12px 28px;font-size:1rem">Volver a intentar</button>
+      </div>`;
+    opts.forEach(b => b.disabled = true);
+    return;
+  }
+  const ch = tChallenges[tStep];
+  const td = ch.debe.reduce((a,b)=>a+b,0);
+  const th = ch.haber.reduce((a,b)=>a+b,0);
+  container.innerHTML = `
+    <div class="t-card-title">${ch.accountName}</div>
+    <div class="t-columns">
+      <div class="t-col left">
+        <div class="t-col-label">Debe</div>
+        ${ch.debe.map(v=>`<div class="t-val">$ ${v}</div>`).join('')}
+        <div class="t-total">$ ${td}</div>
+      </div>
+      <div class="t-col right">
+        <div class="t-col-label">Haber</div>
+        ${ch.haber.map(v=>`<div class="t-val">$ ${v}</div>`).join('')}
+        <div class="t-total">$ ${th}</div>
+      </div>
+    </div>
+    ${tFeedback ? `
+      <div class="t-feedback-overlay">
+        ${tFeedback === 'correct'
+          ? `<svg viewBox="0 0 24 24" style="stroke:var(--green)"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+             <div class="title" style="color:var(--green)">¡Excelente!</div>
+             <div class="sub">${td > th ? 'Debe > Haber = Deudor' : th > td ? 'Haber > Debe = Acreedor' : 'Debe = Haber = Saldada'}</div>`
+          : `<svg viewBox="0 0 24 24" style="stroke:var(--red)"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+             <div class="title" style="color:var(--red)">¡Casi!</div>
+             <div class="sub">Observa cuál lado es mayor.</div>`}
+      </div>` : ''}`;
+  opts.forEach(b => b.disabled = !!tFeedback);
+}
+
+function tCheck(type) {
+  if (tFeedback) return;
+  tSelected = type;
+  const ch = tChallenges[tStep];
+  tFeedback = type === ch.correctSaldoType ? 'correct' : 'incorrect';
+  if (tFeedback === 'correct') tScore++;
+  const btns = document.querySelectorAll('.t-opt-btn');
+  btns.forEach(b => {
+    b.disabled = true;
+    if (b.textContent.includes(type.toUpperCase()) || b.classList.contains(type.toLowerCase())) {
+      b.classList.add(tFeedback === 'correct' ? 'correct' : 'wrong');
+    }
+  });
+  renderTCard();
+  setTimeout(() => {
+    btns.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = false; });
+    tFeedback = null; tSelected = null;
+    if (tStep < tChallenges.length - 1) { tStep++; }
+    else { tDone = true; }
+    renderTCard();
+  }, 2000);
+}
+function tReset() { tStep = 0; tScore = 0; tFeedback = null; tDone = false; tSelected = null; document.querySelectorAll('.t-opt-btn').forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong');}); renderTCard(); }
+renderTCard();
+
+// ── SIMULATOR ──
+let simA = 1000, simP = 400, simPN = 600, simHistory = [];
+
+const simOps = {
+  perm_cash:  { desc:'Compra de muebles en efectivo', amount:100, type:'Permutativa', impact:'Cambio de un activo por otro activo (Muebles por Dinero)', apply: () => { /* net 0 */ } },
+  perm_credit:{ desc:'Compra de mercadería a crédito', amount:200, type:'Permutativa', impact:'Aumento de un activo y de un pasivo', apply: () => { simA+=200; simP+=200; } },
+  perm_pay:   { desc:'Pago de deuda en efectivo', amount:200, type:'Permutativa', impact:'Disminución de un activo y de un pasivo', apply: () => { if(simP<200||simA<200) return false; simA-=200; simP-=200; } },
+  modif_gain: { desc:'Cobro de alquileres ganados', amount:120, type:'Modificativa', impact:'Aumento del Activo y del Patrimonio (Ganancia)', apply: () => { simA+=120; simPN+=120; } },
+  modif_loss: { desc:'Pago de impuestos en efectivo', amount:20, type:'Modificativa', impact:'Disminución del Activo y del Patrimonio (Pérdida)', apply: () => { if(simA<20) return false; simA-=20; simPN-=20; } },
+  mixta_desc: { desc:'Compra con descuento ($40)', amount:300, type:'Mixta', impact:'Permuta de valores + Ganancia por descuento', apply: () => { simA+=300-260; simPN+=40; } },
+  mixta_int:  { desc:'Compra a plazo con interés', amount:200, type:'Mixta', impact:'Permuta de valores + Pérdida por interés', apply: () => { simA+=200; simP+=210; simPN-=10; } },
+};
+
+function simOp(key) {
+  const op = simOps[key];
+  const result = op.apply();
+  if (result === false) return;
+  simHistory.unshift({ ...op, id: Date.now() });
+  if (simHistory.length > 5) simHistory.pop();
+  renderSim();
+}
+function simReset() { simA=1000; simP=400; simPN=600; simHistory=[]; renderSim(); }
+
+function renderSim() {
+  document.getElementById('sim-assets').textContent = '$' + simA;
+  document.getElementById('sim-liab').textContent = '$' + simP;
+  document.getElementById('sim-equity').textContent = '$' + simPN;
+  const balanced = Math.abs(simA - (simP + simPN)) < 0.01;
+  const msg = document.getElementById('sim-balance-msg');
+  msg.textContent = balanced ? '✓ La ecuación está equilibrada (A = P + PN)' : '⚠ Atención: la ecuación está desequilibrada';
+  msg.className = 'sim-balance-msg ' + (balanced ? 'ok' : 'err');
+
+  const list = document.getElementById('sim-history-list');
+  if (simHistory.length === 0) { list.innerHTML = '<div class="sim-empty">Haz clic en un botón para ver el impacto en la balanza</div>'; return; }
+  const typeMap = { Permutativa: 'hist-perm', Modificativa: 'hist-modif', Mixta: 'hist-mixta' };
+  const badgeMap = { Permutativa: 'badge-perm', Modificativa: 'badge-modif', Mixta: 'badge-mixta' };
+  const iconMap = {
+    Permutativa: '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+    Modificativa: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>',
+    Mixta: '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>',
+  };
+  list.innerHTML = simHistory.map(h => `
+    <div class="history-item">
+      <div class="history-item-left">
+        <div class="history-icon ${typeMap[h.type]}">
+          <svg viewBox="0 0 24 24">${iconMap[h.type]}</svg>
+        </div>
+        <div>
+          <div class="history-desc">${h.desc}</div>
+          <div class="history-sub">${h.impact}</div>
+        </div>
+      </div>
+      <div class="history-right">
+        <span class="history-amount">$${h.amount}</span>
+        <span class="badge ${badgeMap[h.type]}">${h.type}</span>
+      </div>
+    </div>`).join('');
+}
+renderSim();
+
+// ── QUIZ ──
+const quizQuestions = [
+  { q:'¿A qué grupo pertenece el dinero en efectivo?', opts:[{id:'a',label:'Activos',color:'#1a56db'},{id:'b',label:'Pasivos',color:'#c81e1e'}], correct:'a' },
+  { q:'Si pides un préstamo al banco, ¿qué aumenta?', opts:[{id:'a',label:'Patrimonio',color:'#059669'},{id:'b',label:'Pasivos',color:'#c81e1e'}], correct:'b' },
+  { q:'El camión de la empresa es un...', opts:[{id:'a',label:'Activo',color:'#1a56db'},{id:'b',label:'Gasto',color:'#d97706'}], correct:'a' },
+  { q:'Las Ventas pertenecen al grupo de...', opts:[{id:'a',label:'Ganancias',color:'#059669'},{id:'b',label:'Activos',color:'#1a56db'}], correct:'a' },
+  { q:'Los Sueldos pagados son...', opts:[{id:'a',label:'Pérdidas',color:'#d97706'},{id:'b',label:'Pasivos',color:'#c81e1e'}], correct:'a' },
+];
+let qStep = 0, qScore = 0, qSelected = null, qDone = false;
+const icons = {
+  '#1a56db': '<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>',
+  '#c81e1e': '<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',
+  '#059669': '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  '#d97706': '<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>',
+};
+
+function renderQuiz() {
+  const wrap = document.getElementById('quiz-wrap');
+  if (qDone) {
+    wrap.innerHTML = `
+      <div class="quiz-result">
+        <div class="quiz-result-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h3>¡Excelente trabajo!</h3>
+        <p>Respondiste correctamente ${qScore} de ${quizQuestions.length} preguntas.</p>
+        <button class="btn btn-primary" onclick="qReset()" style="font-size:1rem;padding:14px 32px">Intentar de nuevo</button>
+      </div>`;
+    return;
+  }
+  const q = quizQuestions[qStep];
+  wrap.innerHTML = `
+    <div class="quiz-header">
+      <span style="font-size:13px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em">Pregunta ${qStep+1} de ${quizQuestions.length}</span>
+      <div class="quiz-pips">${quizQuestions.map((_,i)=>`<div class="quiz-pip ${i<qStep?'done':''}"></div>`).join('')}</div>
+    </div>
+    <div class="quiz-question">${q.q}</div>
+    <div class="quiz-options">
+      ${q.opts.map(o => {
+        const isSelected = qSelected === o.id;
+        const isCorrect = o.id === q.correct;
+        let cls = '';
+        if (qSelected) {
+          if (isSelected && isCorrect) cls = 'correct';
+          else if (isSelected && !isCorrect) cls = 'wrong';
+          else if (!isSelected && isCorrect && qSelected !== null) cls = 'reveal-correct'; // BUG FIX: siempre mostrar correcta
+          else cls = 'dimmed';
+        }
+        return `<button class="quiz-opt ${cls}" onclick="qAnswer('${o.id}')" ${qSelected?'disabled':''}>
+          <div class="opt-icon" style="background:${o.color}">
+            <svg viewBox="0 0 24 24">${icons[o.color]||''}</svg>
+          </div>
+          ${o.label}
+          ${isSelected && isCorrect ? '<span class="feedback-badge ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>' : ''}
+          ${isSelected && !isCorrect ? '<span class="feedback-badge err"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>' : ''}
+        </button>`;
+      }).join('')}
+    </div>`;
+}
+function qAnswer(id) {
+  if (qSelected) return;
+  qSelected = id;
+  if (id === quizQuestions[qStep].correct) qScore++;
+  renderQuiz();
+  setTimeout(() => {
+    qSelected = null;
+    if (qStep < quizQuestions.length - 1) { qStep++; }
+    else { qDone = true; }
+    renderQuiz();
+  }, 1800);
+}
+function qReset() { qStep=0; qScore=0; qSelected=null; qDone=false; renderQuiz(); }
+renderQuiz();
+</script>
+</body>
+</html>
