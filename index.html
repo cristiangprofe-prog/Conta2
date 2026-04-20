@@ -130,11 +130,116 @@ main { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem 5rem; }
 .dict-group-btn.open .chevron { transform: rotate(90deg); }
 .dict-accounts { display: none; padding: 8px 4px; }
 .dict-accounts.open { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
-.dict-account { background: white; border: 2px solid var(--gray-100); border-radius: 12px; padding: 12px 14px; transition: border-color .2s; display: flex; gap: 10px; }
-.dict-account:hover { border-color: var(--blue-mid); }
-.dict-account svg { width: 16px; height: 16px; stroke: var(--blue-mid); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; margin-top: 2px; }
-.dict-account h4 { font-size: .88rem; font-weight: 700; color: var(--gray-900); margin-bottom: 3px; }
-.dict-account p { font-size: .8rem; color: var(--gray-500); line-height: 1.5; }
+/* ── Flip Card Dictionary ── */
+.dict-account {
+  background: transparent;
+  border-radius: 14px;
+  height: 190px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+.dict-account-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform .6s cubic-bezier(.4,0,.2,1);
+  transform-style: preserve-3d;
+}
+.dict-account.flipped .dict-account-inner {
+  transform: rotateY(180deg);
+}
+.dict-account-front,
+.dict-account-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.dict-account-front {
+  background: white;
+  border: 2px solid var(--gray-100);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: border-color .2s, box-shadow .2s;
+}
+.dict-account:hover .dict-account-front {
+  border-color: var(--blue);
+  box-shadow: 0 4px 20px rgba(26,86,219,.12);
+}
+.dict-front-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.dict-front-top svg { width: 16px; height: 16px; stroke: var(--blue); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; margin-top: 3px; }
+.dict-account-front h4 { font-size: .9rem; font-weight: 700; color: var(--gray-900); margin-bottom: 4px; }
+.dict-account-front p { font-size: .78rem; color: var(--gray-500); line-height: 1.5; }
+.flip-hint {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .68rem;
+  font-weight: 700;
+  color: var(--blue);
+  background: var(--blue-light);
+  border-radius: 8px;
+  padding: 5px 10px;
+  letter-spacing: .02em;
+}
+.flip-hint svg { width: 11px; height: 11px; stroke: var(--blue); fill: none; stroke-width: 2.5; flex-shrink: 0; }
+
+/* Back face */
+.dict-account-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 2px solid #334155;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+}
+.dict-account-back::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 80px; height: 80px;
+  background: rgba(59,130,246,.12);
+  border-radius: 50%;
+}
+.back-account-name {
+  font-family: 'Syne', sans-serif;
+  font-size: .85rem;
+  font-weight: 800;
+  color: #e2e8f0;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #334155;
+}
+.back-rules { display: flex; flex-direction: column; gap: 7px; flex: 1; }
+.back-rule {
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  flex: 1;
+}
+.back-rule.debe { background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); }
+.back-rule.haber { background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3); }
+.back-rule-badge {
+  font-size: .6rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.back-rule.debe .back-rule-badge { background: #3b82f6; color: white; }
+.back-rule.haber .back-rule-badge { background: #ef4444; color: white; }
+.back-rule-text { font-size: .74rem; font-weight: 500; color: #cbd5e1; line-height: 1.45; }
 .dict-empty { text-align: center; padding: 5rem 2rem; background: var(--gray-50); border: 2px dashed var(--gray-200); border-radius: var(--radius); color: var(--gray-400); font-weight: 600; }
 
 /* ── Classifier ── */
@@ -364,6 +469,146 @@ footer { border-top: 1px solid var(--gray-200); padding: 2.5rem 2rem; background
 .section-header { text-align: center; max-width: 600px; margin: 0 auto 2.5rem; }
 .section-header h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: .6rem; }
 .section-header p { color: var(--gray-500); font-size: 1rem; line-height: 1.65; }
+
+/* ── Debe o Haber Game ── */
+.dh-score-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.dh-score-bar .dh-pips { display: flex; gap: 5px; }
+.dh-pip { height: 8px; width: 28px; border-radius: 999px; background: var(--gray-200); transition: background .3s; }
+.dh-pip.correct { background: var(--green); }
+.dh-pip.wrong { background: var(--red); }
+.dh-pip.current { background: var(--blue); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+.dh-stat { font-size: .85rem; font-weight: 700; color: var(--gray-500); }
+.dh-stat span { color: var(--gray-900); }
+
+.dh-scenario-card {
+  background: white;
+  border: 3px solid var(--gray-100);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .3s;
+}
+.dh-scenario-card.flash-correct { border-color: var(--green); background: var(--green-light); animation: flashCard .5s ease; }
+.dh-scenario-card.flash-wrong { border-color: var(--red); background: var(--red-light); animation: flashCard .5s ease; }
+@keyframes flashCard { 0%{transform:scale(1)} 20%{transform:scale(1.02)} 100%{transform:scale(1)} }
+.dh-scenario-label { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--gray-400); margin-bottom: .75rem; }
+.dh-scenario-text { font-size: 1.15rem; font-weight: 700; color: var(--gray-900); line-height: 1.55; margin-bottom: 1.25rem; }
+.dh-account-highlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1e293b;
+  color: white;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 8px 16px;
+  border-radius: 10px;
+  margin-bottom: 1.25rem;
+}
+.dh-account-highlight .dh-cat-badge {
+  font-size: .6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: rgba(255,255,255,.15);
+}
+.dh-question { font-size: .95rem; font-weight: 700; color: var(--gray-700); }
+
+.dh-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+.dh-btn {
+  border: none;
+  border-radius: var(--radius);
+  padding: 1.5rem 1rem;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: all .15s;
+  position: relative;
+  overflow: hidden;
+}
+.dh-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.dh-btn:hover::after { opacity: 1; }
+.dh-btn.debe {
+  background: #eff6ff;
+  border: 3px solid #bfdbfe;
+  color: #1e3a8a;
+}
+.dh-btn.debe:hover { background: #dbeafe; border-color: var(--blue); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,86,219,.18); }
+.dh-btn.haber {
+  background: #fef2f2;
+  border: 3px solid #fecaca;
+  color: #7f1d1d;
+}
+.dh-btn.haber:hover { background: #fee2e2; border-color: var(--red); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(200,30,30,.18); }
+.dh-btn:disabled { opacity: .5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+.dh-btn .btn-sub { font-family: 'DM Sans', sans-serif; font-size: .7rem; font-weight: 600; opacity: .7; text-transform: uppercase; letter-spacing: .07em; }
+.dh-btn.selected-correct { background: var(--green-light) !important; border-color: var(--green) !important; color: #065f46 !important; }
+.dh-btn.selected-wrong { background: var(--red-light) !important; border-color: var(--red) !important; color: #7f1d1d !important; }
+.dh-btn.reveal { background: var(--green-light) !important; border-color: var(--green) !important; color: #065f46 !important; }
+
+.dh-explanation {
+  background: #f8fafc;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-size: .88rem;
+  color: var(--gray-700);
+  line-height: 1.6;
+  animation: fadeUp .3s ease both;
+  margin-bottom: 1.5rem;
+}
+.dh-explanation strong { color: var(--gray-900); }
+.dh-next-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--gray-900);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s;
+}
+.dh-next-btn:hover { background: var(--gray-700); }
+
+.dh-result {
+  text-align: center;
+  background: white;
+  border: 3px solid var(--blue-light);
+  border-radius: var(--radius);
+  padding: 3rem 2rem;
+  animation: fadeUp .4s ease both;
+}
+.dh-result-emoji { font-size: 4rem; margin-bottom: 1rem; }
+.dh-result h3 { font-size: 2rem; font-weight: 800; margin-bottom: .5rem; }
+.dh-result .dh-big-score { font-size: 3.5rem; font-weight: 800; color: var(--blue); line-height: 1; margin: 1rem 0; }
+.dh-result p { color: var(--gray-500); margin-bottom: 2rem; font-size: 1rem; }
+.dh-result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+.dh-result-stat { background: var(--gray-50); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.dh-result-stat .rs-val { font-size: 2rem; font-weight: 800; }
+.dh-result-stat .rs-lbl { font-size: .8rem; color: var(--gray-500); font-weight: 600; }
+.dh-result-stat.ok .rs-val { color: var(--green); }
+.dh-result-stat.err .rs-val { color: var(--red); }
+.dh-streak { display: inline-flex; align-items: center; gap: 8px; background: #fef3c7; border: 2px solid #fde68a; border-radius: 10px; padding: 8px 16px; font-weight: 700; color: #78350f; font-size: .9rem; margin-bottom: 1.5rem; }
 </style>
 </head>
 <body>
@@ -405,6 +650,7 @@ footer { border-top: 1px solid var(--gray-200); padding: 2.5rem 2rem; background
     <button class="tab-btn" onclick="showTab('taccounts')">Práctica T</button>
     <button class="tab-btn" onclick="showTab('simulator')">Simulador</button>
     <button class="tab-btn" onclick="showTab('quiz')">Reto Visual</button>
+    <button class="tab-btn" onclick="showTab('debehaber')">🎮 Debe o Haber</button>
   </div>
 
   <!-- ── TAB: EQUATION ── -->
@@ -668,6 +914,15 @@ footer { border-top: 1px solid var(--gray-200); padding: 2.5rem 2rem; background
     <div style="max-width:640px;margin:0 auto" id="quiz-wrap"></div>
   </div>
 
+  <!-- ── TAB: DEBE O HABER GAME ── -->
+  <div id="tab-debehaber" class="tab-panel">
+    <div class="section-header">
+      <h3>🎮 ¿Debe o Haber?</h3>
+      <p>Te mostramos una situación contable. Decidí en qué columna registrarías la cuenta indicada.</p>
+    </div>
+    <div id="dh-wrap" style="max-width:720px;margin:0 auto"></div>
+  </div>
+
   <!-- TIPS -->
   <div class="tips-grid">
     <div class="tip-card yellow">
@@ -705,54 +960,54 @@ footer { border-top: 1px solid var(--gray-200); padding: 2.5rem 2rem; background
 // ── DATA ──
 const accountsData = [
   { category: 'Activo', accounts: [
-    { name: 'Caja', description: 'Dinero en efectivo.' },
-    { name: 'Valores a depositar', description: 'Cheques recibidos de terceros.' },
-    { name: 'Banco cta. cte.', description: 'Dinero depositado en cuenta corriente en un banco.' },
-    { name: 'Banco caja de Ahorro', description: 'Dinero depositado en caja de ahorro en un banco.' },
-    { name: 'Banco plazo fijo', description: 'Dinero depositado en un banco, a plazo fijo.' },
-    { name: 'Moneda extranjera', description: 'Monedas de otros países en poder de la empresa.' },
-    { name: 'Deudores por ventas', description: 'Personas que deben dinero a la empresa por compra de mercaderías a plazo.' },
-    { name: 'Deudores varios', description: 'Personas que deben a la empresa por otras causas.' },
-    { name: 'Documentos a cobrar', description: 'Pagarés a favor de la empresa.' },
-    { name: 'Alquileres a cobrar', description: 'Monto que se cobrará por ceder el uso de un bien.' },
-    { name: 'Intereses a cobrar', description: 'Monto adicional que se cobrará por otorgar tiempo para un pago.' },
-    { name: 'Mercaderías', description: 'Bienes que la empresa se dedica especialmente a vender.' },
-    { name: 'Instalaciones', description: 'Elementos adheridos al inmueble (carteles, ventiladores, estanterías).' },
-    { name: 'Muebles y útiles', description: 'Bienes destinados al uso que pueden trasladarse (mesas, sillas).' },
-    { name: 'Rodados', description: 'Vehículos destinados al uso (camiones, autos).' },
-    { name: 'Maquinarias', description: 'Máquinas industriales.' },
-    { name: 'Equipos de computación', description: 'Sistemas informáticos de la empresa.' },
-    { name: 'Inmuebles', description: 'Casas, departamentos, locales, etc.' },
-    { name: 'Llave de negocio', description: 'Prestigio y clientela que pueden originar ganancias futuras.' },
+    { name: 'Caja', description: 'Dinero en efectivo.', debe: 'Cuando ingresa dinero en efectivo (cobros, ventas al contado).', haber: 'Cuando egresa dinero (pagos, retiros).' },
+    { name: 'Valores a depositar', description: 'Cheques recibidos de terceros.', debe: 'Cuando se reciben cheques de clientes o terceros.', haber: 'Cuando se depositan o entregan los cheques.' },
+    { name: 'Banco cta. cte.', description: 'Dinero depositado en cuenta corriente en un banco.', debe: 'Cuando se realizan depósitos o acreditaciones bancarias.', haber: 'Cuando se emiten cheques o se efectúan débitos.' },
+    { name: 'Banco caja de Ahorro', description: 'Dinero depositado en caja de ahorro en un banco.', debe: 'Cuando se deposita dinero en la cuenta de ahorro.', haber: 'Cuando se retira dinero de la cuenta de ahorro.' },
+    { name: 'Banco plazo fijo', description: 'Dinero depositado en un banco, a plazo fijo.', debe: 'Cuando se constituye el depósito a plazo fijo.', haber: 'Cuando vence el plazo y se retira el depósito.' },
+    { name: 'Moneda extranjera', description: 'Monedas de otros países en poder de la empresa.', debe: 'Cuando se adquiere moneda extranjera.', haber: 'Cuando se vende o utiliza la moneda extranjera.' },
+    { name: 'Deudores por ventas', description: 'Personas que deben dinero a la empresa por compra de mercaderías a plazo.', debe: 'Cuando se vende a plazo (nace la deuda del cliente).', haber: 'Cuando el cliente efectúa el pago.' },
+    { name: 'Deudores varios', description: 'Personas que deben a la empresa por otras causas.', debe: 'Cuando surge una deuda a favor de la empresa por causas diversas.', haber: 'Cuando el deudor cancela su deuda.' },
+    { name: 'Documentos a cobrar', description: 'Pagarés a favor de la empresa.', debe: 'Cuando se recibe un pagaré de un cliente.', haber: 'Cuando se cobra o descuenta el pagaré.' },
+    { name: 'Alquileres a cobrar', description: 'Monto que se cobrará por ceder el uso de un bien.', debe: 'Cuando se devenga el alquiler aún no cobrado.', haber: 'Cuando se efectúa el cobro del alquiler.' },
+    { name: 'Intereses a cobrar', description: 'Monto adicional que se cobrará por otorgar tiempo para un pago.', debe: 'Cuando se devengan intereses aún no percibidos.', haber: 'Cuando se cobran los intereses.' },
+    { name: 'Mercaderías', description: 'Bienes que la empresa se dedica especialmente a vender.', debe: 'Cuando se compran mercaderías (ingreso al stock).', haber: 'Cuando se venden o se dan de baja por pérdida.' },
+    { name: 'Instalaciones', description: 'Elementos adheridos al inmueble (carteles, ventiladores, estanterías).', debe: 'Cuando se adquieren o incorporan instalaciones.', haber: 'Cuando se dan de baja o se venden.' },
+    { name: 'Muebles y útiles', description: 'Bienes destinados al uso que pueden trasladarse (mesas, sillas).', debe: 'Cuando se compran o incorporan muebles y útiles.', haber: 'Cuando se venden o se dan de baja.' },
+    { name: 'Rodados', description: 'Vehículos destinados al uso (camiones, autos).', debe: 'Cuando se adquieren vehículos para la empresa.', haber: 'Cuando se venden o se dan de baja los vehículos.' },
+    { name: 'Maquinarias', description: 'Máquinas industriales.', debe: 'Cuando se compran o incorporan máquinas.', haber: 'Cuando se venden o se retiran del uso.' },
+    { name: 'Equipos de computación', description: 'Sistemas informáticos de la empresa.', debe: 'Cuando se adquieren equipos informáticos.', haber: 'Cuando se venden o dan de baja.' },
+    { name: 'Inmuebles', description: 'Casas, departamentos, locales, etc.', debe: 'Cuando se adquieren propiedades.', haber: 'Cuando se venden o transfieren.' },
+    { name: 'Llave de negocio', description: 'Prestigio y clientela que pueden originar ganancias futuras.', debe: 'Cuando se paga por la adquisición del fondo de comercio.', haber: 'Cuando se amortiza o da de baja.' },
   ]},
   { category: 'Pasivo', accounts: [
-    { name: 'Acreedores', description: 'Personas a las que se debe por préstamos u otras causas.' },
-    { name: 'Proveedores', description: 'Personas a las que se debe por compra de mercaderías a plazo.' },
-    { name: 'Documentos a pagar', description: 'Pagarés entregados a favor de terceros.' },
-    { name: 'Cheques diferidos a pagar', description: 'Cheques diferidos entregados a terceros.' },
-    { name: 'Alquileres a pagar', description: 'Monto que se pagará por el uso de un bien.' },
-    { name: 'Comisiones a pagar', description: 'Monto que se pagará a un intermediario.' },
-    { name: 'Intereses a pagar', description: 'Recargo que se pagará por obtener un plazo.' },
+    { name: 'Acreedores', description: 'Personas a las que se debe por préstamos u otras causas.', debe: 'Cuando se cancela total o parcialmente la deuda.', haber: 'Cuando nace la deuda (se recibe el préstamo u otro beneficio).' },
+    { name: 'Proveedores', description: 'Personas a las que se debe por compra de mercaderías a plazo.', debe: 'Cuando se paga la deuda al proveedor.', haber: 'Cuando se compra mercadería a plazo (nace la deuda).' },
+    { name: 'Documentos a pagar', description: 'Pagarés entregados a favor de terceros.', debe: 'Cuando se cancela el pagaré.', haber: 'Cuando se firma y entrega el pagaré.' },
+    { name: 'Cheques diferidos a pagar', description: 'Cheques diferidos entregados a terceros.', debe: 'Cuando se efectiviza y cancela el cheque.', haber: 'Cuando se entrega el cheque diferido.' },
+    { name: 'Alquileres a pagar', description: 'Monto que se pagará por el uso de un bien.', debe: 'Cuando se abona el alquiler adeudado.', haber: 'Cuando se devenga el alquiler aún no pagado.' },
+    { name: 'Comisiones a pagar', description: 'Monto que se pagará a un intermediario.', debe: 'Cuando se abona la comisión.', haber: 'Cuando se devenga la comisión adeudada.' },
+    { name: 'Intereses a pagar', description: 'Recargo que se pagará por obtener un plazo.', debe: 'Cuando se cancelan los intereses.', haber: 'Cuando se devengan intereses no pagados.' },
   ]},
   { category: 'Patrimonio Neto', accounts: [
-    { name: 'Capital', description: 'Diferencia entre Activo y Pasivo; lo que realmente posee la empresa.' },
-    { name: 'Reservas', description: 'Ganancias retenidas por la empresa por ley o decisión propia.' },
+    { name: 'Capital', description: 'Diferencia entre Activo y Pasivo; lo que realmente posee la empresa.', debe: 'Cuando el dueño retira aportes o se producen pérdidas del ejercicio.', haber: 'Cuando el dueño realiza aportes o se registran ganancias del ejercicio.' },
+    { name: 'Reservas', description: 'Ganancias retenidas por la empresa por ley o decisión propia.', debe: 'Cuando se usan o liberan las reservas.', haber: 'Cuando se constituyen reservas con ganancias.' },
   ]},
   { category: 'Resultado Negativo (Pérdidas)', accounts: [
-    { name: 'Costo de mercaderías vendidas', description: 'Gasto incurrido en obtener las mercaderías vendidas.' },
-    { name: 'Gastos Generales', description: 'Gastos varios (viáticos, limpieza, etc.).' },
-    { name: 'Sueldos y Jornales', description: 'Remuneraciones pagadas a los empleados.' },
-    { name: 'Servicios', description: 'Pagos de luz, gas, teléfono, etc.' },
-    { name: 'Fletes y acarreos', description: 'Gastos de transporte.' },
-    { name: 'Intereses pagados', description: 'Recargo por pago en cuotas o fuera de término.' },
-    { name: 'Alquileres pagados', description: 'Pago mensual por el uso de un inmueble.' },
+    { name: 'Costo de mercaderías vendidas', description: 'Gasto incurrido en obtener las mercaderías vendidas.', debe: 'Cuando se registra el costo de la mercadería que se vendió.', haber: 'Al cierre del ejercicio para saldar la cuenta.' },
+    { name: 'Gastos Generales', description: 'Gastos varios (viáticos, limpieza, etc.).', debe: 'Cuando se incurre en el gasto.', haber: 'Al cierre del ejercicio para saldar la cuenta.' },
+    { name: 'Sueldos y Jornales', description: 'Remuneraciones pagadas a los empleados.', debe: 'Cuando se pagan o devengan los sueldos.', haber: 'Al cierre del ejercicio para saldar la cuenta.' },
+    { name: 'Servicios', description: 'Pagos de luz, gas, teléfono, etc.', debe: 'Cuando se pagan o devengan los servicios.', haber: 'Al cierre del ejercicio para saldar la cuenta.' },
+    { name: 'Fletes y acarreos', description: 'Gastos de transporte.', debe: 'Cuando se pagan o incurren en gastos de flete.', haber: 'Al cierre del ejercicio para saldar la cuenta.' },
+    { name: 'Intereses pagados', description: 'Recargo por pago en cuotas o fuera de término.', debe: 'Cuando se abonan intereses por financiación.', haber: 'Al cierre del ejercicio para saldar la cuenta.' },
+    { name: 'Alquileres pagados', description: 'Pago mensual por el uso de un inmueble.', debe: 'Cuando se paga el alquiler del período.', haber: 'Al cierre del ejercicio para saldar la cuenta.' },
   ]},
   { category: 'Resultado Positivo (Ganancias)', accounts: [
-    { name: 'Ventas', description: 'Ingresos obtenidos al vender mercaderías.' },
-    { name: 'Descuentos obtenidos', description: 'Rebaja obtenida en el precio de una compra.' },
-    { name: 'Intereses cobrados', description: 'Recargo que se cobra por otorgar plazos.' },
-    { name: 'Alquileres cobrados', description: 'Cobro mensual por dar en uso un inmueble.' },
-    { name: 'Comisiones ganadas', description: 'Dinero percibido por realizar una tarea para otros.' },
+    { name: 'Ventas', description: 'Ingresos obtenidos al vender mercaderías.', debe: 'Al cierre del ejercicio para saldar la cuenta.', haber: 'Cuando se realiza una venta (contado o a plazo).' },
+    { name: 'Descuentos obtenidos', description: 'Rebaja obtenida en el precio de una compra.', debe: 'Al cierre del ejercicio para saldar la cuenta.', haber: 'Cuando el proveedor nos otorga un descuento.' },
+    { name: 'Intereses cobrados', description: 'Recargo que se cobra por otorgar plazos.', debe: 'Al cierre del ejercicio para saldar la cuenta.', haber: 'Cuando se cobran intereses de clientes o deudores.' },
+    { name: 'Alquileres cobrados', description: 'Cobro mensual por dar en uso un inmueble.', debe: 'Al cierre del ejercicio para saldar la cuenta.', haber: 'Cuando se cobra o devenga el alquiler a favor.' },
+    { name: 'Comisiones ganadas', description: 'Dinero percibido por realizar una tarea para otros.', debe: 'Al cierre del ejercicio para saldar la cuenta.', haber: 'Cuando se gana o cobra una comisión.' },
   ]}
 ];
 
@@ -762,7 +1017,7 @@ function showTab(id) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + id).classList.add('active');
   const btns = document.querySelectorAll('.tab-btn');
-  const map = { equation:0, concepts:1, dictionary:2, classifier:3, guide:4, taccounts:5, simulator:6, quiz:7 };
+  const map = { equation:0, concepts:1, dictionary:2, classifier:3, guide:4, taccounts:5, simulator:6, quiz:7, debehaber:8 };
   if (map[id] !== undefined) btns[map[id]].classList.add('active');
 }
 
@@ -791,9 +1046,35 @@ function renderDict(filter='') {
       </button>
       <div class="dict-accounts ${expandedGroups.includes(g.category)?'open':''}">
         ${g.accounts.map(a => `
-          <div class="dict-account">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <div><h4>${a.name}</h4><p>${a.description}</p></div>
+          <div class="dict-account" onclick="this.classList.toggle('flipped')" title="Tocá para ver cuándo va al Debe/Haber">
+            <div class="dict-account-inner">
+              <div class="dict-account-front">
+                <div class="dict-front-top">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <div>
+                    <h4>${a.name}</h4>
+                    <p>${a.description}</p>
+                  </div>
+                </div>
+                <div class="flip-hint">
+                  <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                  Tocá · ver Debe / Haber
+                </div>
+              </div>
+              <div class="dict-account-back">
+                <div class="back-account-name">${a.name}</div>
+                <div class="back-rules">
+                  <div class="back-rule debe">
+                    <span class="back-rule-badge">Debe</span>
+                    <span class="back-rule-text">${a.debe||'—'}</span>
+                  </div>
+                  <div class="back-rule haber">
+                    <span class="back-rule-badge">Haber</span>
+                    <span class="back-rule-text">${a.haber||'—'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>`).join('')}
       </div>
     </div>`).join('');
@@ -1113,6 +1394,171 @@ function qAnswer(id) {
 }
 function qReset() { qStep=0; qScore=0; qSelected=null; qDone=false; renderQuiz(); }
 renderQuiz();
+
+// ── DEBE O HABER GAME ──
+const dhQuestions = [
+  { scenario: 'La empresa cobra $5.000 en efectivo por una venta al contado.', account: 'Caja', category: 'Activo', answer: 'DEBE', explanation: 'La Caja <strong>aumenta</strong> porque entra efectivo. Los Activos aumentan por el Debe.' },
+  { scenario: 'La empresa vende mercadería al contado por $5.000.', account: 'Ventas', category: 'Ganancia', answer: 'HABER', explanation: 'Las Ventas son una <strong>Ganancia</strong>. Las Ganancias se registran en el Haber cuando se generan.' },
+  { scenario: 'Se compra mercadería a crédito por $3.000.', account: 'Proveedores', category: 'Pasivo', answer: 'HABER', explanation: 'Los Proveedores son un <strong>Pasivo</strong>. Los Pasivos aumentan por el Haber (nace una deuda).' },
+  { scenario: 'Se compra mercadería a crédito por $3.000.', account: 'Mercaderías', category: 'Activo', answer: 'DEBE', explanation: 'Las Mercaderías son un <strong>Activo</strong>. Los Activos aumentan por el Debe (ingresa stock).' },
+  { scenario: 'Se paga el alquiler del local con cheque por $1.200.', account: 'Alquileres pagados', category: 'Pérdida', answer: 'DEBE', explanation: 'Los Alquileres pagados son una <strong>Pérdida</strong>. Las Pérdidas siempre se registran en el Debe.' },
+  { scenario: 'Se paga el alquiler del local con cheque por $1.200.', account: 'Banco cta. cte.', category: 'Activo', answer: 'HABER', explanation: 'El Banco <strong>disminuye</strong> porque entregamos el cheque. Los Activos disminuyen por el Haber.' },
+  { scenario: 'Un cliente firma un pagaré a favor de la empresa por $8.000.', account: 'Documentos a cobrar', category: 'Activo', answer: 'DEBE', explanation: 'Los Documentos a cobrar son un <strong>Activo</strong>. Aumentan por el Debe (nace un derecho a cobrar).' },
+  { scenario: 'Se paga una deuda a un acreedor en efectivo por $2.000.', account: 'Acreedores', category: 'Pasivo', answer: 'DEBE', explanation: 'Los Acreedores son un <strong>Pasivo</strong>. Los Pasivos disminuyen por el Debe (se cancela la deuda).' },
+  { scenario: 'Se paga una deuda a un acreedor en efectivo por $2.000.', account: 'Caja', category: 'Activo', answer: 'HABER', explanation: 'La Caja <strong>disminuye</strong> porque egresa efectivo. Los Activos disminuyen por el Haber.' },
+  { scenario: 'El dueño aporta $50.000 en efectivo como capital inicial.', account: 'Capital', category: 'Patrimonio Neto', answer: 'HABER', explanation: 'El Capital es <strong>Patrimonio Neto</strong>. Aumenta por el Haber cuando el dueño realiza aportes.' },
+  { scenario: 'El dueño aporta $50.000 en efectivo como capital inicial.', account: 'Caja', category: 'Activo', answer: 'DEBE', explanation: 'La Caja <strong>aumenta</strong> porque entra el dinero del dueño. Los Activos aumentan por el Debe.' },
+  { scenario: 'Se cobran intereses por un préstamo otorgado, $400 en efectivo.', account: 'Intereses cobrados', category: 'Ganancia', answer: 'HABER', explanation: 'Los Intereses cobrados son una <strong>Ganancia</strong>. Las Ganancias aumentan por el Haber.' },
+  { scenario: 'Se pagan sueldos del mes por $15.000 en efectivo.', account: 'Sueldos y Jornales', category: 'Pérdida', answer: 'DEBE', explanation: 'Los Sueldos son una <strong>Pérdida</strong>. Las Pérdidas siempre se registran en el Debe.' },
+  { scenario: 'La empresa vende mercadería a plazo por $7.000.', account: 'Deudores por ventas', category: 'Activo', answer: 'DEBE', explanation: 'Los Deudores por ventas son un <strong>Activo</strong>. Aumentan por el Debe (el cliente nos queda debiendo).' },
+  { scenario: 'Se deposita efectivo en el banco por $10.000.', account: 'Banco cta. cte.', category: 'Activo', answer: 'DEBE', explanation: 'El Banco <strong>aumenta</strong> porque depositamos dinero. Los Activos aumentan por el Debe.' },
+  { scenario: 'Se deposita efectivo en el banco por $10.000.', account: 'Caja', category: 'Activo', answer: 'HABER', explanation: 'La Caja <strong>disminuye</strong> porque el efectivo sale de caja. Los Activos disminuyen por el Haber.' },
+  { scenario: 'Se obtiene un descuento del proveedor del 10% sobre la compra.', account: 'Descuentos obtenidos', category: 'Ganancia', answer: 'HABER', explanation: 'Los Descuentos obtenidos son una <strong>Ganancia</strong>. Las Ganancias se registran en el Haber.' },
+  { scenario: 'Se compra una computadora para la empresa pagando en efectivo $80.000.', account: 'Equipos de computación', category: 'Activo', answer: 'DEBE', explanation: 'Los Equipos de computación son un <strong>Activo</strong>. Aumentan por el Debe al incorporarse al patrimonio.' },
+  { scenario: 'Se firma un pagaré a favor de un proveedor por $6.000.', account: 'Documentos a pagar', category: 'Pasivo', answer: 'HABER', explanation: 'Los Documentos a pagar son un <strong>Pasivo</strong>. Aumentan por el Haber (nace una deuda documentada).' },
+  { scenario: 'Se cobran alquileres por un local cedido en uso, $2.500 en efectivo.', account: 'Alquileres cobrados', category: 'Ganancia', answer: 'HABER', explanation: 'Los Alquileres cobrados son una <strong>Ganancia</strong>. Las Ganancias aumentan por el Haber.' },
+];
+
+let dhIndex = 0, dhScore = 0, dhSelected = null, dhDone = false;
+let dhOrder = [];
+let dhResults = [];
+let dhStreak = 0, dhMaxStreak = 0, dhCurrentStreak = 0;
+
+function dhShuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function dhInit() {
+  dhOrder = dhShuffle(dhQuestions).slice(0, 12);
+  dhIndex = 0; dhScore = 0; dhSelected = null; dhDone = false;
+  dhResults = []; dhCurrentStreak = 0; dhMaxStreak = 0;
+  dhRender();
+}
+
+function dhAnswer(choice) {
+  if (dhSelected) return;
+  const q = dhOrder[dhIndex];
+  dhSelected = choice;
+  const correct = choice === q.answer;
+  dhResults.push(correct);
+  if (correct) {
+    dhScore++;
+    dhCurrentStreak++;
+    dhMaxStreak = Math.max(dhMaxStreak, dhCurrentStreak);
+  } else {
+    dhCurrentStreak = 0;
+  }
+  dhRender();
+}
+
+function dhNext() {
+  dhSelected = null;
+  if (dhIndex < dhOrder.length - 1) {
+    dhIndex++;
+  } else {
+    dhDone = true;
+  }
+  dhRender();
+}
+
+function dhRender() {
+  const wrap = document.getElementById('dh-wrap');
+  if (!wrap) return;
+
+  if (dhDone) {
+    const pct = Math.round(dhScore / dhOrder.length * 100);
+    const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+    const msg = pct >= 80 ? '¡Dominas la partida doble!' : pct >= 60 ? '¡Buen trabajo, seguí practicando!' : 'Repasá las reglas de Debe y Haber.';
+    wrap.innerHTML = `
+      <div class="dh-result">
+        <div class="dh-result-emoji">${emoji}</div>
+        <h3>Resultado Final</h3>
+        <div class="dh-big-score">${dhScore}/${dhOrder.length}</div>
+        ${dhMaxStreak >= 3 ? `<div class="dh-streak">🔥 Racha máxima: ${dhMaxStreak} correctas seguidas</div>` : ''}
+        <p>${msg}</p>
+        <div class="dh-result-grid">
+          <div class="dh-result-stat ok"><div class="rs-val">${dhScore}</div><div class="rs-lbl">Correctas</div></div>
+          <div class="dh-result-stat err"><div class="rs-val">${dhOrder.length - dhScore}</div><div class="rs-lbl">Incorrectas</div></div>
+        </div>
+        <button class="dh-next-btn" onclick="dhInit()">🔄 Jugar de nuevo</button>
+        <div style="margin-top:12px">
+          <button class="btn btn-outline" onclick="showTab('guide')" style="font-size:.85rem">📖 Repasar reglas</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const q = dhOrder[dhIndex];
+  const pips = dhOrder.map((_, i) => {
+    if (i < dhIndex) return `<div class="dh-pip ${dhResults[i] ? 'correct' : 'wrong'}"></div>`;
+    if (i === dhIndex) return `<div class="dh-pip current"></div>`;
+    return `<div class="dh-pip"></div>`;
+  }).join('');
+
+  const catColors = {
+    'Activo': '#1a56db', 'Pasivo': '#c81e1e',
+    'Patrimonio Neto': '#057a55', 'Ganancia': '#059669', 'Pérdida': '#d97706'
+  };
+  const catColor = catColors[q.category] || '#6b7280';
+
+  let debeExtra = '', haberExtra = '';
+  if (dhSelected) {
+    if (q.answer === 'DEBE') {
+      debeExtra = dhSelected === 'DEBE' ? 'selected-correct' : 'reveal';
+      if (dhSelected === 'HABER') haberExtra = 'selected-wrong';
+    } else {
+      haberExtra = dhSelected === 'HABER' ? 'selected-correct' : 'reveal';
+      if (dhSelected === 'DEBE') debeExtra = 'selected-wrong';
+    }
+  }
+
+  wrap.innerHTML = `
+    <div class="dh-score-bar">
+      <div class="dh-pips">${pips}</div>
+      <div class="dh-stat">Pregunta <span>${dhIndex + 1}</span> de <span>${dhOrder.length}</span> · <span style="color:var(--green)">${dhScore} ✓</span></div>
+    </div>
+    <div class="dh-scenario-card" id="dh-card">
+      <div class="dh-scenario-label">📋 Situación contable</div>
+      <div class="dh-scenario-text">${q.scenario}</div>
+      <div class="dh-account-highlight">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        ${q.account}
+        <span class="dh-cat-badge" style="background:${catColor}22;color:${catColor};border:1px solid ${catColor}44">${q.category}</span>
+      </div>
+      <div class="dh-question">¿En qué columna registrarías <strong>${q.account}</strong>?</div>
+    </div>
+    <div class="dh-buttons">
+      <button class="dh-btn debe ${debeExtra}" onclick="dhAnswer('DEBE')" ${dhSelected ? 'disabled' : ''}>
+        <span>DEBE</span>
+        <span class="btn-sub">← Columna izquierda</span>
+      </button>
+      <button class="dh-btn haber ${haberExtra}" onclick="dhAnswer('HABER')" ${dhSelected ? 'disabled' : ''}>
+        <span>HABER</span>
+        <span class="btn-sub">Columna derecha →</span>
+      </button>
+    </div>
+    ${dhSelected ? `
+      <div class="dh-explanation">
+        ${dhResults[dhIndex] ? '✅' : '❌'} ${q.explanation}
+      </div>
+      <button class="dh-next-btn" onclick="dhNext()">
+        ${dhIndex < dhOrder.length - 1 ? 'Siguiente pregunta →' : 'Ver resultado final →'}
+      </button>
+    ` : ''}`;
+
+  if (dhSelected) {
+    const card = document.getElementById('dh-card');
+    if (card) {
+      card.classList.add(dhResults[dhIndex] ? 'flash-correct' : 'flash-wrong');
+    }
+  }
+}
+dhInit();
 </script>
 </body>
 </html>
